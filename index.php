@@ -12,11 +12,24 @@
 </head>
 <body>
 <?php 
-$liste_plats_midi = array("plat1", "plat2", "plat3", "plat4", "plat5", "plat6", "plat7", "plat8", "plat9", "plat10", "plat11");
-$liste_plats_soir = array("plat1", "plat2", "plat3", "plat4", "plat5", "plat6", "plat7", "plat8", "plat9");  
+$liste_plats_midi = array();
+$liste_plats_soir = array();  
 ?>
+<?php
+    $servername = 'localhost';
+    $username = 'root';
+    $password = '';
 
-  <form action="" method="get">
+    $conn = new PDO('mysql:host=localhost;dbname=repas', $username, $password);
+    foreach ($conn->query('SELECT * FROM midi') as $row){
+      array_push($liste_plats_midi, $row[1]); 
+    }
+    foreach ($conn->query('SELECT * FROM soir') as $row){
+      array_push($liste_plats_soir, $row[1]); 
+    }
+        ?>
+
+  <form action="form.php" method="get">
   <ul>
     <li>
       <label for="name">Nom du plat:</label>
@@ -26,7 +39,7 @@ $liste_plats_soir = array("plat1", "plat2", "plat3", "plat4", "plat5", "plat6", 
     <fieldset>
   <legend>Repas du : </legend>
   <div>
-    <input type="checkbox" id="midi" name="midi" checked />
+    <input type="checkbox" id="midi" name="midi"/>
     <label for="midi">Midi</label>
   </div>
 
@@ -40,16 +53,6 @@ $liste_plats_soir = array("plat1", "plat2", "plat3", "plat4", "plat5", "plat6", 
   <input type="submit" name="submit" /> 
 </form>
 
-<?php
-   // Vérifier si le formulaire est soumis 
-   if ( isset( $_GET['submit'] ) ) {
-     $nom = $_GET['nom']; 
-     $repas1 = $_GET['midi']; 
-     $repas2 = $_GET['soir']; 
-     echo $nom, $repas1, $repas2; 
-     exit;
-  }
-?>
 
 
 <table>
@@ -78,9 +81,10 @@ $liste_plats_soir = array("plat1", "plat2", "plat3", "plat4", "plat5", "plat6", 
   </tr>
   <tr>
   <?php shuffle($liste_plats_midi); 
-    for ($i = 1; $i <= 7; $i++) {
+    for ($i = 0; $i <= 5; $i++) {
         echo "<td>$liste_plats_midi[$i]</td>"; 
 }?>
+  <td>Frites - saumon</td>
   </tr>
   <tr>
     <td>&nbsp;</td>
@@ -102,11 +106,12 @@ $liste_plats_soir = array("plat1", "plat2", "plat3", "plat4", "plat5", "plat6", 
   </tr>
   <tr>
   <?php shuffle($liste_plats_soir); 
-    for ($i = 1; $i <= 7; $i++) {
+    for ($i = 0; $i <= 6; $i++) {
         echo "<td>$liste_plats_soir[$i]</td>"; 
 }?>
   </tr>
 </tbody>
 </table>
+
 </body>
 </html>
